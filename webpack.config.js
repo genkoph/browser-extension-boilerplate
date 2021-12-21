@@ -1,7 +1,6 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
-
-const environment = process.env.NODE_ENV || "development";
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const sourcePath = path.resolve("src");
 const buildPath = path.resolve("build");
@@ -34,11 +33,27 @@ module.exports = {
     ],
   },
 
+  optimization: {
+    splitChunks: {
+      name: 'vendor',
+      chunks: 'initial',
+    },
+  },
+
   plugins: [
+    /**
+     * Copy static files to the build directory
+     */
     new CopyPlugin({
       patterns: [
         { from: publicPath, to: buildPath }
       ]
-    })
+    }),
+
+    /**
+     * All files inside webpack's output.path directory
+     * will be removed on every re-bundle
+     */
+    new CleanWebpackPlugin()
   ]
 };
