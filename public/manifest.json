@@ -20,10 +20,10 @@
     "https://*/*"
   ],
 
-  "content_security_policy": "script-src 'self'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 
   "browser_action": {
-    "default_popup": "popup.html",
+    "default_popup": "views/popup.html",
     "default_icon": {
       "16": "assets/icons/favicon-16.png",
       "32": "assets/icons/favicon-32.png",
@@ -34,13 +34,13 @@
   },
 
   "options_ui": {
-    "page": "options.html",
+    "page": "views/options.html",
     "open_in_tab": true
   },
 
   "background": {
     "scripts": [
-      "background.bundle.js"
+      "assets/scripts/background.bundle.js"
     ]
   },
 
@@ -50,7 +50,7 @@
       "https://*/*"
     ],
     "js": [
-      "contentScript.bundle.js"
+      "assets/scripts/contentScript.bundle.js"
     ]
   }]
 }

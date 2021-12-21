@@ -1,10 +1,12 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const sourcePath = path.resolve("src");
 const buildPath = path.resolve("build");
 const publicPath = path.resolve('public');
+const viewsPath = path.join(publicPath, 'views');
 
 module.exports = {
   entry: {
@@ -16,7 +18,7 @@ module.exports = {
 
   output: {
     path: buildPath,
-    filename: "[name].bundle.js",
+    filename: "assets/scripts/[name].bundle.js",
   },
 
   resolve: {
@@ -46,7 +48,7 @@ module.exports = {
      */
     new CopyPlugin({
       patterns: [
-        { from: publicPath, to: buildPath }
+        { from: publicPath, to: buildPath, globOptions: { ignore: ['**/views/**']} }
       ]
     }),
 
@@ -54,6 +56,30 @@ module.exports = {
      * All files inside webpack's output.path directory
      * will be removed on every re-bundle
      */
-    new CleanWebpackPlugin()
-  ]
+    new CleanWebpackPlugin(),
+
+    /**
+     * Create html file for the popup document
+     */
+    new HtmlWebpackPlugin({
+      template: path.join(viewsPath, 'popup.html'),
+      inject: 'body',
+      chunks: ['popup'],
+      filename: 'views/popup.html',
+    }),
+
+    /**
+     * Create html file for the options document
+     */
+    new HtmlWebpackPlugin({
+      template: path.join(viewsPath, 'options.html'),
+      inject: 'body',
+      chunks: ['options'],
+      filename: 'views/options.html',
+    })
+  ],
+  
+  devServer: {
+    hot: true
+  }
 };
